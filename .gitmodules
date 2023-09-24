@@ -1,0 +1,3 @@
+[submodule "Rider-backend"]
+	path = Rider-backend
+	url = https://github.com/Belei-Vitalii-Student/Rider-backend.git
