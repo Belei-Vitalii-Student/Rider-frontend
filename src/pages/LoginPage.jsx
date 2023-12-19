@@ -4,11 +4,38 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { URL } from "../config/URL/urls";
 
 export default function LoginPage({props}) {
     const googleLoginHandler = (response) => {
+      fetch(URL.SERVER.HOST + URL.SERVER.ENDPOINT.AUTH, {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + response.credential,
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        if(data.success && data.token) {
+          // STOPED HERE
+        }
+      })
+      .catch(error => {
+        console.error('Fetch error:', error);
+      });
+
+
         console.log(response)
-        toast.success("LOGINED")
+        console.log(response.credential)
+        toast.success("Logined")
     }
 
     return (
