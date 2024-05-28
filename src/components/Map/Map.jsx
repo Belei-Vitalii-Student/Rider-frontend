@@ -1,118 +1,231 @@
-import GoogleMap from 'google-map-react'
-import map from '../../config/map'
-import Place from '../Place/Place'
-import { useEffect, useState } from 'react'
+import React, { useCallback, useRef } from "react";
+import ReactDOM from "react-dom";
+import GoogleMap from "google-map-react";
+import map from "../../config/map";
+import Place from "../Place/Place";
+import { useEffect, useState } from "react";
+import "./map.scss";
+import LeftPanel from "./LeftPanel";
+import RightPanel from "./RightPanel";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getNewPath,
+  getPOIPaths,
+  getPOIPlaces,
+  isEditMode,
+  setNewPath,
+  setZoomLevel,
+} from "../../features/map/mapSlice";
+import { useNavigate } from "react-router-dom";
+import { COLOR } from "../../assets/styles/colors";
+import { Polyline } from "@react-google-maps/api";
+import { selectPoiDetailData } from "../../features/poiDetail/poiDetailSlice";
 
 function Map(props) {
-    let linePath
-    // console.log(props)
+  const editMode = useSelector(isEditMode);
+  const paths = useSelector(getPOIPaths);
+  const polyLineRefs = useRef([]);
+  const polyLineRef = useRef(null);
+  const mapRef = useRef(null);
+  const mapsRef = useRef(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const defaultProps = {
-        center: { lat: 48.9354547453022, lng: 24.700544141400652 },
-        zoom: 16
-    }
+  const defaultProps = {
+    center: { lat: 48.9354547453022, lng: 24.700544141400652 },
+    zoom: 16,
+  };
 
-    const handleApiLoaded = (map, maps) => {
-        linePath = new maps.Polyline({
-            path: [
-                { lat: 48.93788451042859, lng: 24.703911612301187 },
-                { lat: 48.93552459474604, lng: 24.700922418169913 }
-            ],
-            type: "primary",
-            editable: true,
-            strokeColor: "#FA12AA",
-            strokeOpacity: 1.0,
-            strokeWeight: 4,
-            map: map,
-        })
-        linePath.setMap(map)
-        map.addListener('click', mapClickHandler)
+  const handleApiLoaded = async (map, maps) => {
+    const leftPanel = document.querySelector(".left-panel");
+    const rightPanel = document.querySelector(".right-panel");
+    map.controls[maps.ControlPosition.LEFT].push(leftPanel);
+    map.controls[maps.ControlPosition.RIGHT].push(rightPanel);
 
+    polyLineRef.current = new maps.Polyline({
+      path: [],
+      type: "primary",
+      editable: true,
+      strokeColor: "#FA12AA",
+      strokeOpacity: 1.0,
+      strokeWeight: 4,
+      map: map,
+    });
+    mapRef.current = map;
+    mapsRef.current = maps;
+    map.addListener("click", (event) => mapClickHandler(event, editMode));
+  };
 
-
-        const start = { lat: 48.94272994323551, lng: 24.697135652947747 };
-        const end = { lat: 48.9354547453022, lng: 24.700544141400652 };
-
-        // Створити об'єкт DirectionsService
-        const directionsService = new maps.DirectionsService();
-        const directionsRenderer = new maps.DirectionsRenderer()
-        directionsRenderer.setMap(map)
-
-        // Створити об'єкт DirectionsRequest
-        const customPath = [
-            { lat: 48.93788451042859, lng: 24.703911612301187 },
-            { lat: 48.93552459474604, lng: 24.700922418169913 }
-        ];
-
-        const routeSegments = customPath.map(point => ({
-            location: new maps.LatLng(point.lat, point.lng)
-        }));
-
-        const directionsRequest = {
-            origin: start,
-            destination: end,
-            travelMode: maps.TravelMode.WALKING,
-            waypoints: routeSegments
-        };
-
-        console.log(directionsService)
-
-        // Запросити маршрут
-        directionsService.route(directionsRequest, (response, status) => {
-        // Обробити результат
-        if (status === maps.DirectionsStatus.OK) {
-            console.log(response);
-            directionsRenderer.setDirections(response)
-        }
+  useEffect(() => {
+    if (mapRef.current && mapsRef.current) {
+      polyLineRefs.current = paths.map((path) => {
+        const polyline = new mapsRef.current.Polyline({
+          path: path.coordinates.map((coord) => ({
+            lat: coord.lat,
+            lng: coord.lng,
+          })),
+          type: "primary",
+          editable: false,
+          strokeColor: COLOR.BICYCLE_PATH,
+          strokeOpacity: 1.0,
+          strokeWeight: 4,
+          map: mapRef.current,
         });
+
+        polyline.addListener("click", () =>
+          handlePolylineClick(polyline, path)
+        );
+        polyline.addListener("mouseover", () => handlePolylineHover(polyline));
+        polyline.addListener("mouseout", () =>
+          handlePolylineMouseOut(polyline)
+        );
+        return polyline;
+      });
     }
+  }, [paths, mapRef, mapsRef]);
 
-    const mapClickHandler = (event) => {
-        // console.log(linePath, event)
-        if(!linePath) return
-        const path = linePath?.getPath()
+  // useEffect(() => {
+  //   if (editMode) {
+  //     polyLineRefs.current.forEach((polyline) => {
+  //       polyline.setMap(null);
+  //     });
+  //     polyLineRefs.current = [];
+  //   } else {
+  //     if (polyLineRefs.current.length === 0) {
+  //       polyLineRefs.current = paths.map((path) => {
+  //         const polyline = new mapsRef.current.Polyline({
+  //           path: path.coordinates.map((coord) => ({
+  //             lat: coord.lat,
+  //             lng: coord.lng,
+  //           })),
+  //           type: "primary",
+  //           editable: false,
+  //           strokeColor: "#FA12AA",
+  //           strokeOpacity: 1.0,
+  //           strokeWeight: 4,
+  //           map: mapRef.current,
+  //         });
 
-        path.push(event.latLng);
-    }
+  //         polyline.addListener("click", () =>
+  //           handlePolylineClick(polyline, path)
+  //         );
+  //         polyline.addListener("mouseover", () =>
+  //           handlePolylineHover(polyline)
+  //         );
+  //         polyline.addListener("mouseout", () =>
+  //           handlePolylineMouseOut(polyline)
+  //         );
+  //         return polyline;
+  //       });
+  //     }
+  //   }
+  // }, [paths, editMode, mapRef, mapsRef]);
 
-    const childClickHandler = (pos, data) => {
-        console.log(pos, data)
-    }
+  const handlePolylineClick = (polyline, path) => {
+    navigate(`/${path.id}`);
+  };
 
-    const mapOption = (maps) => {
-        return {
-            panControl: true,
-            mapTypeControl: true,
-            streetViewControl:true,
-        }
-    }
+  const handlePolylineHover = (polyline) => {
+    polyline.setOptions({
+      strokeColor: COLOR.PRIMARY,
+      strokeWeight: 8,
+    });
+  };
 
-    const changeHandler = (event) => {
-        // console.log(linePath)
-        // const lineArr = linePath?.latLngs.g[0].g
-        // if(!lineArr) return
-        // console.log("\n")
-        // for(let line of lineArr) {
-        //     console.log(line.lat() + " | " + line.lng())
-        // }
-    }
+  const handlePolylineMouseOut = (polyline) => {
+    polyline.setOptions({
+      strokeColor: COLOR.BICYCLE_PATH,
+      strokeWeight: 4,
+    });
+  };
 
-    return (
-        <GoogleMap
-            options={mapOption}
-            hoverDistance={20}
-            bootstrapURLKeys={{ key: map.key }}
-            defaultCenter={defaultProps.center}
-            defaultZoom={defaultProps.zoom}
-            yesIWantToUseGoogleMapApiInternals
-            onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
-            // onClick={mapClickHandler}
-            onChildClick={childClickHandler}
-            onChange={changeHandler}
-        >
-            <Place lat={defaultProps.center.lat} lng={defaultProps.center.lng} text={"Marker"} />
-        </GoogleMap>
-    )
+  const mapClickHandler = useCallback(
+    (event, editMode) => {
+      console.log(event);
+      if (!editMode) return;
+      let latLng;
+      if (event.latLng) {
+        latLng = {
+          lat: event.latLng.lat(),
+          lng: event.latLng.lng(),
+        };
+      } else {
+        latLng = {
+          lat: event.lat,
+          lng: event.lng,
+        };
+      }
+      const path = polyLineRef.current.getPath();
+      path.push(new mapsRef.current.LatLng(latLng.lat, latLng.lng));
+
+      new mapsRef.current.Marker({
+        position: latLng,
+        title: "#" + path.getLength(),
+        map: mapsRef.current,
+      });
+
+      const newPathArray = path.getArray().map((latLng) => ({
+        lat: latLng.lat(),
+        lng: latLng.lng(),
+      }));
+
+      dispatch(setNewPath(newPathArray));
+    },
+    [polyLineRef, mapsRef, dispatch]
+  );
+
+  const poi = useSelector(selectPoiDetailData);
+  useEffect(() => {
+    if (!mapRef.current) return;
+    mapRef.current.setCenter(
+      new mapsRef.current.LatLng(poi.coordinates[0].lat, poi.coordinates[0].lng)
+    );
+  }, [poi]);
+
+  const childClickHandler = (pos, data) => {};
+
+  const mapOption = (maps) => {
+    return {
+      panControl: true,
+      mapTypeControl: true,
+      streetViewControl: true,
+    };
+  };
+
+  const changeHandler = (event) => {
+    dispatch(setZoomLevel(event.zoom));
+  };
+
+  const places = useSelector(getPOIPlaces);
+
+  return (
+    <div className="map">
+      <LeftPanel />
+      <RightPanel />
+      <GoogleMap
+        options={mapOption}
+        hoverDistance={20}
+        bootstrapURLKeys={{ key: map.key }}
+        defaultCenter={defaultProps.center}
+        defaultZoom={defaultProps.zoom}
+        yesIWantToUseGoogleMapApiInternals
+        onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+        onClick={(event) => mapClickHandler(event, editMode)}
+        onChildClick={childClickHandler}
+        onChange={changeHandler}
+      >
+        {places?.map((place) => (
+          <Place
+            key={place.id}
+            lat={place.coordinates[0].lat}
+            lng={place.coordinates[0].lng}
+            text={place.title}
+            place={place}
+          />
+        ))}
+      </GoogleMap>
+    </div>
+  );
 }
 
 export default Map;

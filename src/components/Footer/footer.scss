@@ -1,0 +1,127 @@
+@import "../../assets/styles/colors.scss";
+
+footer {
+  margin-top: auto;
+  width: 100%;
+  min-height: 210px;
+  height: fit-content;
+  background-color: $primary;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  .container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
+    width: 50%;
+    height: 100%;
+    padding: 20px 0;
+    margin: 0;
+
+    .actions {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: start;
+      width: 25%;
+      .lang {
+        width: 100%;
+        .lang-select {
+          width: 100%;
+        }
+      }
+      .mobile-app {
+        button {
+          img {
+          }
+          span {
+          }
+        }
+      }
+    }
+    .info {
+      position: relative;
+      display: flex;
+      gap: 20px;
+      .list {
+        list-style: none;
+        text-align: start;
+        font-size: 12pt;
+        font-weight: 300;
+        color: $white;
+        padding: 5px;
+        li {
+          margin-bottom: 2px;
+          &.title {
+            font-weight: 700;
+          }
+          a {
+            text-decoration: none;
+            color: $white;
+            display: inline-block;
+
+            &:hover {
+              transform: scale(1.05);
+            }
+          }
+        }
+      }
+    }
+    .contacts {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      color: $white;
+      text-align: start;
+      gap: 40px;
+      .brand {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        .service {
+          position: relative;
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: $white;
+          }
+          .version-block {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            .name {
+              font-size: 18pt;
+              font-weight: 700;
+            }
+            .version {
+              font-size: 8pt;
+            }
+          }
+        }
+        span {
+          font-size: 10pt;
+          font-weight: 400;
+        }
+      }
+      .socials {
+        ul {
+          display: flex;
+          list-style: none;
+          li {
+            width: 30px;
+            height: 30px;
+          }
+        }
+      }
+    }
+  }
+}

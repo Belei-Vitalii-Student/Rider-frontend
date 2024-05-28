@@ -1,0 +1,97 @@
+@import "../../assets/styles/colors.scss";
+
+header {
+  z-index: 1000;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  background-color: $white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+  nav {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    width: 50%;
+    height: 100%;
+    .logo {
+      width: 60px;
+      height: 60px;
+      img {
+        width: 50%;
+        height: 50%;
+        object-fit: contain;
+        aspect-ratio: 1 / 1;
+      }
+    }
+    .menu {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+      max-height: 100%;
+      .search {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: 30px;
+        background-color: $white;
+        box-shadow: 0 1px 3px 0 rgba($color: #000000, $alpha: 0.25);
+        border-radius: 25px;
+        padding: 0 15px;
+
+        input {
+          height: 100%;
+        }
+
+        input::placeholder {
+          font-size: 10pt;
+          color: $gray;
+        }
+        .search-icon {
+          position: relative;
+          color: $gray;
+        }
+      }
+      .lang-selector {
+        position: relative;
+        .selected-lang {
+          font-size: 10pt;
+          outline: none;
+          border: none;
+          background-color: transparent;
+          cursor: pointer;
+          color: $gray;
+        }
+        .lang-list {
+          position: absolute;
+          list-style: none;
+          background-color: $white;
+          box-shadow: 0 1px 3px 0 rgba($color: #000000, $alpha: 0.25);
+          padding: 10px;
+          left: -10px;
+          li button {
+            outline: none;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            color: $gray;
+          }
+        }
+      }
+      .login-btn {
+      }
+    }
+  }
+}

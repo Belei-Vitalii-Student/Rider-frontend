@@ -1,36 +1,46 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import Logo from '../../assets/rider-logo.svg';
-import { Link } from 'react-router-dom';
-import { COLOR } from '../../assets/styles/colors';
-import Tabs from './TabsBlock';
-import TabsBlock from './TabsBlock';
+import * as React from "react";
+import "./navigation.scss";
+import { useSelector } from "react-redux";
+import { isLoggedIn } from "../../features/login/loginSlice";
+import { Link } from "react-router-dom";
+import UserButton from "../User/UserButton";
+import SearchIcon from "@mui/icons-material/Search";
+import Logo from "../Logo/Logo";
 
-function ResponsiveAppBar() {
+export default function Navigation() {
+  const loggedIn = useSelector(isLoggedIn);
 
   return (
-    <AppBar
-    position="sticky"
-    sx={{
-        backgroundColor: "#fff"
-    }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{gap: '20px'}}>
-          <Link to="/">
-            <img src={Logo} width={40}/>
-          </Link>
-          <TabsBlock />
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Link to="/login"><Button variant="outlined">Login</Button></Link>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+    <header>
+      <nav>
+        <div className="logo">
+          <Logo />
+        </div>
+        <div className="menu">
+          <div className="search">
+            <input type="text" placeholder="Search"></input>
+            <SearchIcon className="search-icon" />
+          </div>
+          <div className="lang-selector">
+            <button className="selected-lang">EN</button>
+            <ul className="lang-list">
+              <li>
+                <button>EN</button>
+              </li>
+              <li>
+                <button>UK</button>
+              </li>
+            </ul>
+          </div>
+          {loggedIn ? (
+            <UserButton />
+          ) : (
+            <Link to={"/login"}>
+              <button className="login-btn">Login</button>
+            </Link>
+          )}
+        </div>
+      </nav>
+    </header>
   );
 }
-export default ResponsiveAppBar;

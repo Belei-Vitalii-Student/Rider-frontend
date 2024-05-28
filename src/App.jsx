@@ -1,30 +1,46 @@
-import { ToastContainer, toast } from 'react-toastify';
-import './App.css';
-import Map from './components/Map/Map';
-import { GoogleLogin, useGoogleOneTapLogin } from '@react-oauth/google';
-import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
+import { ToastContainer, toast } from "react-toastify";
+import "./App.css";
+import { GoogleLogin, useGoogleOneTapLogin } from "@react-oauth/google";
+import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import Navigation from "./components/Navigation/Navigation";
+import Footer from "./components/Footer/Footer";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setLoginData } from "./features/login/loginSlice";
 
 function App() {
   useGoogleOneTapLogin({
-    onSuccess: credentialResponse => {
+    onSuccess: (credentialResponse) => {
       console.log(credentialResponse);
     },
     onError: () => {
-      console.log('Login Failed');
+      console.log("Login Failed");
     },
   });
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const tokenString = localStorage.getItem("authToken");
+    if (tokenString) {
+      const token = JSON.parse(tokenString);
+      dispatch(setLoginData(token));
+    }
+  }, [dispatch]);
+
   return (
-    <div className='App'>
+    <div className="App">
       <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
+        <Navigation />
+        <Routes>
+          <Route path="/*" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+        <Footer />
       </BrowserRouter>
-      <ToastContainer 
+      <ToastContainer
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -36,9 +52,6 @@ function App() {
         theme="light"
       />
     </div>
-    // // <div className='app'>
-    // //   <div style={{ height: '100vh', width: '100%' }}>
-    //     <Map /> */
   );
 }
 
