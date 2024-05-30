@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { PLACE_TYPES } from "../../config/types";
 
 const initialState = {
   editMode: false,
   pois: [],
   newPath: [],
   sortOrder: "recent",
+  typeFilter: Object.values(PLACE_TYPES),
 };
 
 export const mapSlice = createSlice({
@@ -29,6 +31,9 @@ export const mapSlice = createSlice({
     setZoomLevel: (state, action) => {
       state.zoomLevel = action.payload;
     },
+    setTypeFilter: (state, action) => {
+      state.typeFilter = action.payload;
+    },
   },
 });
 
@@ -40,10 +45,15 @@ export const getNewPath = (state) => state.map.newPath;
 export const getSelectedType = (state) => state.map.selectedType;
 export const getSortOrder = (state) => state.map.sortOrder;
 export const getPOIPlaces = (state) =>
-  state.map.pois.filter((poi) => poi.type == "place");
+  state.map.pois.filter(
+    (poi) =>
+      poi.type == "place" &&
+      poi.types.some((type) => state.map.typeFilter.includes(type))
+  );
 export const getPOIPaths = (state) =>
   state.map.pois.filter((poi) => poi.type == "path");
 export const getZoomLevel = (state) => state.map.zoomLevel;
+export const getTypeFilter = (state) => state.map.typeFilter;
 
 export const {
   setMapPOIs,
@@ -52,5 +62,6 @@ export const {
   changeSelectedType,
   setSortOrder,
   setZoomLevel,
+  setTypeFilter,
 } = mapSlice.actions;
 export default mapSlice.reducer;

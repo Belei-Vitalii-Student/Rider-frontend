@@ -20,9 +20,12 @@ import {
   selectPoiLikes,
   setPoiDetailData,
 } from "../../features/poiDetail/poiDetailSlice";
+import { selectUserId } from "../../features/login/loginSlice";
 
-export default function POIDetails({ props }) {
+export default function POIDetails(props) {
+  const { form = true } = props;
   const { id } = useParams();
+  if (id === "profile" || id === "edit") return null;
   const likes = useSelector(selectPoiLikes);
   const dislikes = useSelector(selectPoiDislikes);
   const { data, loading, error } = useQuery(QUERY.POI, {
@@ -107,7 +110,7 @@ export default function POIDetails({ props }) {
           </ul>
         </div>
         <div className="comments-block">
-          <CommentForm />
+          {form && <CommentForm />}
           <h2>COMMENTS</h2>
           <CommentsList />
         </div>

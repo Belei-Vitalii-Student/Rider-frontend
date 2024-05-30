@@ -7,8 +7,16 @@ import { QUERY } from "../../config/graphql/query";
 import { useDispatch, useSelector } from "react-redux";
 import { getMapPOIs, setMapPOIs } from "../../features/map/mapSlice";
 
-export default function POIList({ props }) {
-  const { data, loading, error } = useQuery(QUERY.ALL_POIS);
+export default function POIList(props) {
+  const { userId, type, link } = props;
+  const { data, loading, error } = useQuery(QUERY.ALL_POIS, {
+    variables: {
+      ...(userId && { userId: userId }),
+      ...(type && { type: type }),
+    },
+  });
+
+  console.log();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,7 +32,7 @@ export default function POIList({ props }) {
       <POISortOptions />
       <ul className="places-list">
         {pois.map((poi) => {
-          return <POIElement key={poi.id} poi={poi} />;
+          return <POIElement key={poi.id} poi={poi} link={link} />;
         })}
       </ul>
     </div>

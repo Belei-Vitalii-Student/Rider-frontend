@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 
 export default function CommentsList({ props }) {
   const feedbacks = useSelector(selectPoiFeedbacks);
-  console.log(feedbacks);
 
   if (!feedbacks || feedbacks.length === 0) {
     return <div>NO COMMENTS YET</div>;

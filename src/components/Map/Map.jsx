@@ -84,43 +84,6 @@ function Map(props) {
     }
   }, [paths, mapRef, mapsRef]);
 
-  // useEffect(() => {
-  //   if (editMode) {
-  //     polyLineRefs.current.forEach((polyline) => {
-  //       polyline.setMap(null);
-  //     });
-  //     polyLineRefs.current = [];
-  //   } else {
-  //     if (polyLineRefs.current.length === 0) {
-  //       polyLineRefs.current = paths.map((path) => {
-  //         const polyline = new mapsRef.current.Polyline({
-  //           path: path.coordinates.map((coord) => ({
-  //             lat: coord.lat,
-  //             lng: coord.lng,
-  //           })),
-  //           type: "primary",
-  //           editable: false,
-  //           strokeColor: "#FA12AA",
-  //           strokeOpacity: 1.0,
-  //           strokeWeight: 4,
-  //           map: mapRef.current,
-  //         });
-
-  //         polyline.addListener("click", () =>
-  //           handlePolylineClick(polyline, path)
-  //         );
-  //         polyline.addListener("mouseover", () =>
-  //           handlePolylineHover(polyline)
-  //         );
-  //         polyline.addListener("mouseout", () =>
-  //           handlePolylineMouseOut(polyline)
-  //         );
-  //         return polyline;
-  //       });
-  //     }
-  //   }
-  // }, [paths, editMode, mapRef, mapsRef]);
-
   const handlePolylineClick = (polyline, path) => {
     navigate(`/${path.id}`);
   };
@@ -141,7 +104,6 @@ function Map(props) {
 
   const mapClickHandler = useCallback(
     (event, editMode) => {
-      console.log(event);
       if (!editMode) return;
       let latLng;
       if (event.latLng) {

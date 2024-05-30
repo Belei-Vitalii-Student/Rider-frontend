@@ -8,7 +8,7 @@ import PlaceIcon from "@mui/icons-material/Place";
 
 import RouteIcon from "@mui/icons-material/Route";
 
-export default function POIElement({ poi }) {
+export default function POIElement({ poi, link = "" }) {
   const handleButtonClick = (event) => {
     event.stopPropagation();
     event.preventDefault();
@@ -17,7 +17,7 @@ export default function POIElement({ poi }) {
 
   return (
     <Link
-      to={`/${poi.id}`}
+      to={`${link}/${poi.id}`}
       style={{ color: "inherit", textDecoration: "none" }}
     >
       <li className="place-el">

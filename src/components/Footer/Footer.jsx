@@ -1,5 +1,6 @@
 import { MenuItem, Select } from "@mui/material";
 import "./footer.scss";
+import Logo from "../Logo/Logo";
 
 export default function Footer({ props }) {
   return (
@@ -66,7 +67,7 @@ export default function Footer({ props }) {
         <div className="contacts">
           <div className="brand">
             <div className="service">
-              <img src="http://logo" />
+              <Logo />
               <div className="version-block">
                 <span className="name">Rider</span>
                 <span className="version">version 1.0.0</span>

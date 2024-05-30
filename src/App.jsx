@@ -1,24 +1,50 @@
 import { ToastContainer, toast } from "react-toastify";
 import "./App.css";
 import { GoogleLogin, useGoogleOneTapLogin } from "@react-oauth/google";
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Router,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import Navigation from "./components/Navigation/Navigation";
 import Footer from "./components/Footer/Footer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { setLoginData } from "./features/login/loginSlice";
+import { selectUserId, setLoginData } from "./features/login/loginSlice";
+import { URL } from "./config/URL/urls";
 
 function App() {
-  useGoogleOneTapLogin({
-    onSuccess: (credentialResponse) => {
-      console.log(credentialResponse);
-    },
-    onError: () => {
-      console.log("Login Failed");
-    },
-  });
+  const googleLoginHandler = (response) => {
+    localStorage.setItem("accessToken", response.credential);
+    fetch(URL.SERVER.HOST + URL.SERVER.ENDPOINT.AUTH, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + response.credential,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success && data.token) {
+          dispatch(setLoginData(data.token));
+          localStorage.setItem("authToken", JSON.stringify(data.token));
+          toast.success("Logged in successfully");
+        }
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
+  };
 
   const dispatch = useDispatch();
 
@@ -29,6 +55,17 @@ function App() {
       dispatch(setLoginData(token));
     }
   }, [dispatch]);
+
+  const login = useGoogleOneTapLogin({
+    onSuccess: (credentialResponse) => {
+      googleLoginHandler(credentialResponse);
+    },
+    onError: (e) => {
+      toast.error("Login failed");
+      console.log(e);
+    },
+  });
+
 
   return (
     <div className="App">

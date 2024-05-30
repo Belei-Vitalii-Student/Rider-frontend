@@ -35,23 +35,37 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        background-color: $primary;
+        background-color: $gray;
         font-size: 1rem;
         font-weight: 700;
         color: $white;
-        padding: 5px 15px;
+        padding: 2px 15px;
         border-radius: 10px;
         opacity: 0.7;
+        gap: 5px;
+        transition: 0.2s;
 
-        p {
-        }
-        img {
+        svg {
           width: 20px;
           height: 20px;
+          color: $white;
+        }
+
+        &.selected {
+          background-color: $primary;
+          color: $white;
         }
 
         &:hover {
-          background-color: $gray;
+          cursor: pointer;
+          background-color: $white;
+          color: $primary;
+          opacity: 1;
+          transition: 0.2s;
+
+          svg {
+            color: $primary;
+          }
         }
       }
     }

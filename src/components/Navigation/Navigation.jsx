@@ -23,14 +23,14 @@ export default function Navigation() {
           </div>
           <div className="lang-selector">
             <button className="selected-lang">EN</button>
-            <ul className="lang-list">
+            {/* <ul className="lang-list">
               <li>
                 <button>EN</button>
               </li>
               <li>
                 <button>UK</button>
               </li>
-            </ul>
+            </ul> */}
           </div>
           {loggedIn ? (
             <UserButton />
