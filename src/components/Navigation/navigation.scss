@@ -22,7 +22,12 @@ header {
     flex-direction: row;
     width: 50%;
     height: 100%;
+
     .logo {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 60px;
       height: 60px;
       img {
@@ -64,6 +69,24 @@ header {
           color: $gray;
         }
       }
+      .link {
+        color: $white;
+        background-color: $primary;
+        text-decoration: none;
+        text-align: center;
+        font-weight: 700;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        padding: 2px 10px;
+        transition: 0.2s;
+
+        &:hover {
+          background-color: $white;
+          color: $primary;
+          border: 2px solid $primary;
+          transition: 0.2s;
+        }
+      }
       .lang-selector {
         position: relative;
         .selected-lang {
@@ -91,6 +114,61 @@ header {
         }
       }
       .login-btn {
+      }
+    }
+
+    @media (max-width: 768px) {
+      width: 75%;
+
+      .menu {
+        gap: 15px;
+
+        .search {
+          height: 25px;
+          padding: 0 10px;
+
+          input::placeholder {
+            font-size: 9pt;
+          }
+        }
+
+        .link {
+          padding: 2px 8px;
+        }
+
+        .lang-selector .selected-lang {
+          font-size: 9pt;
+        }
+      }
+    }
+
+    @media (max-width: 500px) {
+      width: 100%;
+      padding: 0 10px;
+
+      .logo {
+        width: 30px;
+        height: 30px;
+      }
+
+      .menu {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+
+        .search {
+          width: 100%;
+        }
+
+        .link {
+          width: 100%;
+          text-align: center;
+        }
+
+        .lang-selector .selected-lang {
+          font-size: 8pt;
+        }
       }
     }
   }

@@ -132,6 +132,8 @@
       flex-direction: column;
       justify-content: end;
       gap: 4px;
+      text-decoration: none;
+      color: inherit;
       span {
         font-size: 8pt;
         font-weight: 700;
@@ -233,5 +235,65 @@
   .left-panel,
   .right-panel {
     pointer-events: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .map {
+    width: 100%;
+    height: 50vh;
+
+    .left-panel {
+      align-items: center;
+      justify-content: start;
+      padding-top: 50px;
+      height: 100%;
+      top: 0 !important;
+      bottom: 0 !important;
+      .places-option-list {
+        max-height: 80%;
+        .place-option-el {
+          gap: 0;
+          align-items: center;
+          flex-direction: column;
+          justify-content: center;
+          padding: 2px;
+          margin: 0;
+          .icon {
+            justify-content: center;
+            svg {
+              width: 25px;
+              height: 25px;
+            }
+          }
+          .name span {
+            font-size: 10px;
+          }
+        }
+      }
+    }
+
+    .road-type-list {
+      display: none;
+    }
+
+    .right-panel {
+      .history {
+        visibility: hidden;
+      }
+      .bottom {
+      }
+      .login-btn {
+      }
+      .new-poi {
+        text-decoration: none;
+        .text {
+          opacity: 1;
+          width: 100%;
+        }
+      }
+      .edit-mode-block {
+      }
+    }
   }
 }

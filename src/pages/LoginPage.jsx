@@ -53,8 +53,10 @@ export default function LoginPage({ props }) {
   };
 
   useEffect(() => {
-    navigate("/");
-    toast.success("You are already logged in");
+    if (userId) {
+      navigate("/");
+      // toast.success("You are already logged in");
+    }
   }, [userId]);
 
   return (

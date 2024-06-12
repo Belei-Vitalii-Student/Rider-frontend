@@ -6,6 +6,7 @@ import { useQuery } from "@apollo/client";
 import { QUERY } from "../../config/graphql/query";
 import { useDispatch, useSelector } from "react-redux";
 import { getMapPOIs, setMapPOIs } from "../../features/map/mapSlice";
+import Loading from "../Loading/Loading";
 
 export default function POIList(props) {
   const { userId, type, link } = props;
@@ -16,16 +17,19 @@ export default function POIList(props) {
     },
   });
 
-  console.log();
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (data) {
       dispatch(setMapPOIs(data?.pois));
     }
-  }, [loading]);
+  }, [loading, userId]);
 
   const pois = useSelector(getMapPOIs);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="places-block">

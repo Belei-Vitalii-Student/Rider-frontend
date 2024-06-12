@@ -68,8 +68,9 @@ export default function LeftPanel({ props }) {
                     selected: selectedTypes.includes(value),
                   })}
                 >
-                  <ListItemIcon>{icons[value]}</ListItemIcon>
+                  <ListItemIcon className="icon">{icons[value]}</ListItemIcon>
                   <ListItemText
+                    className="name"
                     primary={key.charAt(0) + key.slice(1).toLowerCase()}
                   />
                 </ListItem>

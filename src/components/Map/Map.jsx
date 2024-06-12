@@ -19,7 +19,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { COLOR } from "../../assets/styles/colors";
 import { Polyline } from "@react-google-maps/api";
-import { selectPoiDetailData } from "../../features/poiDetail/poiDetailSlice";
+import {
+  selectPoiDetailData,
+  selectPoiId,
+} from "../../features/poiDetail/poiDetailSlice";
 
 function Map(props) {
   const editMode = useSelector(isEditMode);
@@ -30,6 +33,7 @@ function Map(props) {
   const mapsRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [width, setWidth] = useState(4);
 
   const defaultProps = {
     center: { lat: 48.9354547453022, lng: 24.700544141400652 },
@@ -56,8 +60,9 @@ function Map(props) {
     map.addListener("click", (event) => mapClickHandler(event, editMode));
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     if (mapRef.current && mapsRef.current) {
+      await resetPolyline();
       polyLineRefs.current = paths.map((path) => {
         const polyline = new mapsRef.current.Polyline({
           path: path.coordinates.map((coord) => ({
@@ -67,8 +72,8 @@ function Map(props) {
           type: "primary",
           editable: false,
           strokeColor: COLOR.BICYCLE_PATH,
-          strokeOpacity: 1.0,
-          strokeWeight: 4,
+          strokeOpacity: 1,
+          strokeWeight: width,
           map: mapRef.current,
         });
 
@@ -81,6 +86,7 @@ function Map(props) {
         );
         return polyline;
       });
+      // setWidth((width) => width + 10);
     }
   }, [paths, mapRef, mapsRef]);
 
@@ -91,14 +97,14 @@ function Map(props) {
   const handlePolylineHover = (polyline) => {
     polyline.setOptions({
       strokeColor: COLOR.PRIMARY,
-      strokeWeight: 8,
+      strokeWeight: width * 2,
     });
   };
 
   const handlePolylineMouseOut = (polyline) => {
     polyline.setOptions({
       strokeColor: COLOR.BICYCLE_PATH,
-      strokeWeight: 4,
+      strokeWeight: width,
     });
   };
 
@@ -133,7 +139,7 @@ function Map(props) {
 
       dispatch(setNewPath(newPathArray));
     },
-    [polyLineRef, mapsRef, dispatch]
+    [polyLineRef, mapsRef, dispatch, editMode]
   );
 
   const poi = useSelector(selectPoiDetailData);
@@ -144,7 +150,11 @@ function Map(props) {
     );
   }, [poi]);
 
-  const childClickHandler = (pos, data) => {};
+  useEffect(() => {
+    if (!editMode && polyLineRef.current) {
+      polyLineRef.current.setPath([]);
+    }
+  }, [editMode]);
 
   const mapOption = (maps) => {
     return {
@@ -158,10 +168,17 @@ function Map(props) {
     dispatch(setZoomLevel(event.zoom));
   };
 
+  const resetPolyline = async () => {
+    if (!polyLineRefs.current) return;
+    polyLineRefs.current.forEach((polyline) => polyline.setMap(null));
+    polyLineRefs.current = [];
+  };
+
   const places = useSelector(getPOIPlaces);
+  const poiId = useSelector(selectPoiId);
 
   return (
-    <div className="map">
+    <div className="map" id="map">
       <LeftPanel />
       <RightPanel />
       <GoogleMap
@@ -173,9 +190,23 @@ function Map(props) {
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
         onClick={(event) => mapClickHandler(event, editMode)}
-        onChildClick={childClickHandler}
         onChange={changeHandler}
       >
+        {/* {mapRef.current && poiId && (
+          <Polyline
+            path={[
+              { lat: 48.9354547453022, lng: 24.700544141400652 },
+              { lat: 48.0354547453022, lng: 24.700544141400652 },
+            ]}
+            options={{
+              strokeColor: COLOR.BICYCLE_PATH,
+              strokeOpacity: 1.0,
+              strokeWeight: 4,
+              editable: false,
+            }}
+            map={mapRef.current}
+          />
+        )} */}
         {places?.map((place) => (
           <Place
             key={place.id}
@@ -188,6 +219,37 @@ function Map(props) {
       </GoogleMap>
     </div>
   );
+
+  const renderPlaces = () => {
+    return places?.map((place) => (
+      <Place
+        key={place.id}
+        lat={place.coordinates[0].lat}
+        lng={place.coordinates[0].lng}
+        text={place.title}
+        place={place}
+      />
+    ));
+  };
+
+  const renderPaths = () => {
+    return paths?.map((path) => (
+      <Polyline
+        key={path.id}
+        path={path.coordinates.map((coord) => ({
+          lat: coord.lat,
+          lng: coord.lng,
+        }))}
+        options={{
+          strokeColor: COLOR.BICYCLE_PATH,
+          strokeOpacity: 1.0,
+          strokeWeight: 4,
+          editable: false,
+        }}
+        map={mapRef.current}
+      />
+    ));
+  };
 }
 
 export default Map;

@@ -16,6 +16,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 10px;
     width: 100%;
     min-height: 150px;
@@ -83,9 +84,34 @@
           flex-direction: column;
           text-align: start;
 
-          .place-name {
-            font-size: 14pt;
-            font-weight: 700;
+          .grouped {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            align-items: center;
+            .place-name {
+              font-size: 14pt;
+              font-weight: 700;
+            }
+            .types-list {
+              display: flex;
+              flex-direction: row;
+              gap: 5px;
+              text-decoration: none;
+              list-style: none;
+              align-items: center;
+              li {
+                display: flex;
+                align-items: center;
+                justify-self: center;
+                border-radius: 50%;
+              }
+              .icon {
+                width: 20px;
+                height: 20px;
+                color: $primary;
+              }
+            }
           }
 
           .place-address {
@@ -178,6 +204,14 @@
           cursor: pointer;
           font-size: 9pt;
           font-weight: 700;
+          border: 2px solid transparent;
+
+          &:hover {
+            background-color: $white;
+            color: $primary;
+            border: 2px solid $primary;
+            transition: 0.2s;
+          }
         }
       }
     }
@@ -443,8 +477,11 @@
   .adress-block {
     width: 100%;
     max-width: 70%;
+    .place-name {
+      font-weight: 700;
+      font-size: 14pt;
+    }
   }
-
   .place-content {
     height: fit-content;
   }
@@ -482,5 +519,74 @@
       }
     }
     display: flex;
+  }
+}
+
+@media (max-width: 500px) {
+  .common-block {
+    width: 100%;
+  }
+  .place-el {
+    .place-head {
+      .main-info {
+        .type-icon {
+          width: 35px !important;
+          height: 35px !important;
+        }
+        .adress-block {
+          .place-name {
+            font-size: 12pt !important;
+          }
+
+          .place-address {
+            font-size: 9pt !important;
+          }
+        }
+      }
+      .author-block {
+        .date {
+        }
+
+        .author {
+        }
+
+        .author-icon {
+          width: 35px !important;
+          height: 35px !important;
+        }
+      }
+    }
+
+    .place-footer {
+      .feedback {
+        .like-icon,
+        .dislike-icon {
+          width: 15px !important;
+          height: 15px !important;
+
+          &:hover {
+            color: $primary;
+            box-shadow: inset 0 2px 4px 0 rgba($color: #000000, $alpha: 0.25);
+          }
+        }
+
+        .count {
+          font-size: 10pt !important;
+        }
+      }
+
+      .reference-btn {
+        button {
+          background-color: $primary;
+          border: none;
+          color: $white;
+          border-radius: 10px;
+          padding: 5px 15px;
+          cursor: pointer;
+          font-size: 8pt !important;
+          font-weight: 700;
+        }
+      }
+    }
   }
 }

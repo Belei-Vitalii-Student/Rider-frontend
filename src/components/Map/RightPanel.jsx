@@ -44,10 +44,10 @@ export default function RightPanel() {
             </Link>
           </div>
         ) : (
-          <div className="login-btn">
+          <Link to={"/login"} className="login-btn">
             <span>You need to login for adding</span>
             <button>Login</button>
-          </div>
+          </Link>
         )}
       </div>
     </div>

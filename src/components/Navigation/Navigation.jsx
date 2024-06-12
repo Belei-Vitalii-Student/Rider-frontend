@@ -35,8 +35,8 @@ export default function Navigation() {
           {loggedIn ? (
             <UserButton />
           ) : (
-            <Link to={"/login"}>
-              <button className="login-btn">Login</button>
+            <Link to={"/login"} className="link">
+              <span className="login-btn">Login</span>
             </Link>
           )}
         </div>

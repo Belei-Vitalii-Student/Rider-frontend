@@ -12,7 +12,8 @@ import { selectUserId } from "../../features/login/loginSlice";
 import { useMutation } from "@apollo/client";
 import { MUTATION } from "../../config/graphql/mutation";
 
-export default function CommentForm({ createNewComment }) {
+export default function CommentForm(props) {
+  const { author } = props;
   const [description, setDescription] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const poiId = useSelector(selectPoiId);
@@ -54,6 +55,10 @@ export default function CommentForm({ createNewComment }) {
         toast.error("Error: " + err.message);
       });
   };
+
+  if (author) {
+    return <h2>THIS IS YOUR POI</h2>;
+  }
 
   return (
     <form className="comment-form">

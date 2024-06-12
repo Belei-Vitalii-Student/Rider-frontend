@@ -1,4 +1,16 @@
-import { MenuItem, Select } from "@mui/material";
+import { Button } from "@mui/material";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import InstallMobileIcon from "@mui/icons-material/InstallMobile";
+import UKIcon from "../../assets/UK.jsx";
+import UAIcon from "../../assets/UA.jsx";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+
 import "./footer.scss";
 import Logo from "../Logo/Logo";
 
@@ -8,16 +20,22 @@ export default function Footer({ props }) {
       <div className="container">
         <div className="actions">
           <div className="lang">
-            <select id="lang-select">
-              <option value="en">English</option>
-              <option value="uk">Українська</option>
-            </select>
+            <Select defaultValue={"en"} className="lang-select">
+              <MenuItem value="en" className="option">
+                <UKIcon className="icon" />
+                <span>English</span>
+              </MenuItem>
+              <MenuItem value="uk" className="option" disabled>
+                <UAIcon className="icon" />
+                Українська
+              </MenuItem>
+            </Select>
           </div>
           <div className="mobile-app">
-            <button>
-              <img src="http://mobile-app"></img>
+            <Button className="btn">
+              <InstallMobileIcon className="icon" />
               <span>Download mobile app</span>
-            </button>
+            </Button>
           </div>
         </div>
         <div className="info">
@@ -67,7 +85,9 @@ export default function Footer({ props }) {
         <div className="contacts">
           <div className="brand">
             <div className="service">
-              <Logo />
+              <div className="logo">
+                <Logo />
+              </div>
               <div className="version-block">
                 <span className="name">Rider</span>
                 <span className="version">version 1.0.0</span>
@@ -78,16 +98,16 @@ export default function Footer({ props }) {
           <div className="socials">
             <ul>
               <li>
-                <img src="http://facebook" />
+                <FacebookIcon className="icon" />
               </li>
               <li>
-                <img src="http://twitter" />
+                <YouTubeIcon className="icon" />
               </li>
               <li>
-                <img src="http://instagram" />
+                <InstagramIcon className="icon" />
               </li>
               <li>
-                <img src="http://youtube" />
+                <TelegramIcon className="icon" />
               </li>
             </ul>
           </div>

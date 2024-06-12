@@ -25,7 +25,7 @@ export default function ShortInfo(props) {
       <div className="bottom">
         <div className="author">
           <PersonIcon className="icon" />
-          <span>{place.user.name}</span>
+          <span>{place.user.username}</span>
         </div>
         <div className="feedback">
           <div>

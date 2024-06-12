@@ -16,7 +16,7 @@ export default function CommentElement({ feedback }) {
         <div className="main-info">
           <PersonIcon className="user-icon" />
           <div className="author-block">
-            <span className="author">{feedback.user.name}</span>
+            <span className="author">{feedback.user.username}</span>
             <span className="date">{feedback.createdAt}</span>
           </div>
         </div>

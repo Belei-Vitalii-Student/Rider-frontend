@@ -32,12 +32,12 @@ const httpLink = new HttpLink({
 });
 
 const authLink = new ApolloLink((operation, forward) => {
-  const accessToken = localStorage.getItem("accessToken"); // Отримуємо токен доступу з локального сховища або з іншого джерела
+  const accessToken = localStorage.getItem("accessToken");
 
   if (accessToken) {
     operation.setContext({
       headers: {
-        Authorization: `Bearer ${accessToken}`, // Додаємо токен доступу у заголовок Authorization
+        Authorization: `Bearer ${accessToken}`,
       },
     });
   }
@@ -49,11 +49,6 @@ const client = new ApolloClient({
   link: from([authLink, httpLink]),
   cache: new InMemoryCache(),
 });
-
-// const client = new ApolloClient({
-//   uri: `${URL.SERVER.HOST + URL.SERVER.ENDPOINT.GRAPHQL}`, // Replace with your GraphQL API URL
-//   cache: new InMemoryCache(),
-// });
 
 ReactDOM.render(
   <GoogleOAuthProvider clientId={GOOGLE.CLIENT_ID}>
